@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<module>
+	<name>flexfaq</name>
+	<displayName><![CDATA[Flex FAQ]]></displayName>
+	<version><![CDATA[0.0.1]]></version>
+	<description><![CDATA[Flexible FAQ & Products FAQ]]></description>
+	<author><![CDATA[Antonio Rossetti]]></author>
+	<tab><![CDATA[content_management]]></tab>
+	<is_configurable>1</is_configurable>
+	<need_instance>1</need_instance>
+</module>
