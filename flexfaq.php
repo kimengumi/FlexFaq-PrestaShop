@@ -79,6 +79,12 @@ class Flexfaq extends Module {
 
 		include( dirname( __FILE__ ) . '/sql/uninstall.php' );
 
+		// Module Tab
+		if ($id_tab = (int)Tab::getIdFromClassName('AdminFlexfaq')) {
+			$tab = new Tab($id_tab);
+			$tab->delete();
+		}
+
 		return parent::uninstall();
 	}
 

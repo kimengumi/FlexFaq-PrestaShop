@@ -22,16 +22,17 @@ $sql = array();
 
 $sql[] = 'CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'flexfaq` (
     `id_flexfaq` INT(11) NOT NULL AUTO_INCREMENT,
-    `active` TINYINT(1) UNSIGNED NOT NULL DEFAULT \'0\',
-    `in_global_faq` TINYINT(1) UNSIGNED NOT NULL DEFAULT \'0\',
-	`date_add` DATETIME NOT NULL,
-	`date_upd` DATETIME NOT NULL,
+    `active` TINYINT(1) UNSIGNED NOT NULL DEFAULT 0,
+    `common` TINYINT(1) UNSIGNED NOT NULL DEFAULT 0,
+    `position` INT(11) UNSIGNED NOT NULL DEFAULT 0,
+	`date_add` DATETIME DEFAULT CURRENT_TIMESTAMP,
+	`date_upd` DATETIME ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY  (`id_flexfaq`)
 	) ENGINE=' . _MYSQL_ENGINE_ . ' DEFAULT CHARSET=utf8;';
 
 $sql[] = 'CREATE TABLE IF NOT EXISTS ' . _DB_PREFIX_ . 'flexfaq_shop (
 	`id_flexfaq` INT(10) NOT NULL AUTO_INCREMENT,
-	`id_shop` INT(10) NOT NULL,
+	`id_shop` int(10) DEFAULT NULL,
 	PRIMARY KEY(`id_flexfaq`, `id_shop`)
 	)ENGINE=' . _MYSQL_ENGINE_ . ' DEFAULT CHARSET=utf8';
 
@@ -39,7 +40,7 @@ $sql[] = 'CREATE TABLE IF NOT EXISTS ' . _DB_PREFIX_ . 'flexfaq_lang (
 	`id_flexfaq` INT(10) NOT NULL AUTO_INCREMENT,
 	`id_lang` INT(10) NOT NULL,
 	`title` VARCHAR(255) NOT NULL,
-	`text` TEXT,
+	`content` TEXT,
 	PRIMARY KEY(`id_flexfaq`, `id_lang`)
 	)ENGINE=' . _MYSQL_ENGINE_ . ' DEFAULT CHARSET=utf8';
 
