@@ -18,15 +18,6 @@
  * limitations under the Licence.
  */
 
-$sql = array();
+class AdminFlexfaqController extends ModuleAdminController {
 
-$sql[] = 'DROP TABLE  `' . _DB_PREFIX_ . 'flexfaq`;';
-$sql[] = 'DROP TABLE  `' . _DB_PREFIX_ . 'flexfaq_shop`;';
-$sql[] = 'DROP TABLE  `' . _DB_PREFIX_ . 'flexfaq_lang`;';
-$sql[] = 'DROP TABLE  `' . _DB_PREFIX_ . 'flexfaq_product`;';
-
-foreach ($sql as $query) {
-    if (Db::getInstance()->execute($query) == false) {
-        return false;
-    }
 }
