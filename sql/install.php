@@ -31,13 +31,13 @@ $sql[] = 'CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'flexfaq` (
 	) ENGINE=' . _MYSQL_ENGINE_ . ' DEFAULT CHARSET=utf8;';
 
 $sql[] = 'CREATE TABLE IF NOT EXISTS ' . _DB_PREFIX_ . 'flexfaq_shop (
-	`id_flexfaq` INT(10) NOT NULL AUTO_INCREMENT,
+	`id_flexfaq` INT(10) NOT NULL,
 	`id_shop` int(10) DEFAULT NULL,
 	PRIMARY KEY(`id_flexfaq`, `id_shop`)
 	)ENGINE=' . _MYSQL_ENGINE_ . ' DEFAULT CHARSET=utf8';
 
 $sql[] = 'CREATE TABLE IF NOT EXISTS ' . _DB_PREFIX_ . 'flexfaq_lang (
-	`id_flexfaq` INT(10) NOT NULL AUTO_INCREMENT,
+	`id_flexfaq` INT(10) NOT NULL,
 	`id_lang` INT(10) NOT NULL,
 	`title` VARCHAR(255) NOT NULL,
 	`content` TEXT,
@@ -45,9 +45,15 @@ $sql[] = 'CREATE TABLE IF NOT EXISTS ' . _DB_PREFIX_ . 'flexfaq_lang (
 	)ENGINE=' . _MYSQL_ENGINE_ . ' DEFAULT CHARSET=utf8';
 
 $sql[] = 'CREATE TABLE IF NOT EXISTS ' . _DB_PREFIX_ . 'flexfaq_product (
-	`id_flexfaq` INT(10) NOT NULL AUTO_INCREMENT,
+	`id_flexfaq` INT(10) NOT NULL,
 	`id_product` INT(10) NOT NULL,
 	PRIMARY KEY(`id_flexfaq`, `id_product`)
+	)ENGINE=' . _MYSQL_ENGINE_ . ' DEFAULT CHARSET=utf8';
+
+$sql[] = 'CREATE TABLE IF NOT EXISTS ' . _DB_PREFIX_ . 'flexfaq_category (
+	`id_flexfaq` INT(10) NOT NULL,
+	`id_category` INT(10) NOT NULL,
+	PRIMARY KEY(`id_flexfaq`, `id_category`)
 	)ENGINE=' . _MYSQL_ENGINE_ . ' DEFAULT CHARSET=utf8';
 
 
