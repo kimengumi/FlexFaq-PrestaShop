@@ -30,10 +30,12 @@ class FlexFaqModel extends ObjectModelCore {
 		'fields'    => array(
 			'active'   => array(
 				'type'     => self::TYPE_BOOL,
+				'required' => true,
 				'validate' => 'isBool'
 			),
 			'common'   => array(
 				'type'     => self::TYPE_BOOL,
+				'required' => true,
 				'validate' => 'isBool'
 			),
 			'position' => array(
@@ -66,7 +68,7 @@ class FlexFaqModel extends ObjectModelCore {
 	/**
 	 * Builds the object
 	 *
-	 * @param int|null $id      If specified, loads and existing object from DB (optional).
+	 * @param int|null $id If specified, loads and existing object from DB (optional).
 	 * @param int|null $id_lang Required if object is multilingual (optional).
 	 * @param int|null $id_shop ID shop for objects with multishop tables.
 	 *
@@ -93,10 +95,68 @@ class FlexFaqModel extends ObjectModelCore {
 	public function add( $auto_date = true, $null_values = false ) {
 		$return = parent::add( $auto_date, $null_values );
 
-		if($return !== false) {
-			$this->setAssociatedCategories($this->categories);
+		if ( $return !== false ) {
+			$this->setAssociatedCategories( $this->categories );
+			$this->setAssociatedProducts( $this->products );
 		}
+
 		return $return;
+	}
+
+	/**
+	 * Save associated categories for current object
+	 *
+	 * @param $categories array
+	 */
+	public function setAssociatedCategories( $categories ) {
+
+		$this->cleanAssociatedCategories();
+
+		foreach ( $categories as $category ) {
+			Db::getInstance()->insert( 'flexfaq_category', array(
+				'id_flexfaq'  => (int) $this->id,
+				'id_category' => (int) $category
+			) );
+		}
+
+
+	}
+
+	/**
+	 * Clean associated categories for current object
+	 *
+	 * @return bool
+	 */
+	public function cleanAssociatedCategories() {
+		return Db::getInstance()->delete( 'flexfaq_category', 'id_flexfaq = ' . (int) $this->id );
+	}
+
+	/**
+	 * Save associated products for current object
+	 *
+	 * @param $products array
+	 */
+	public function setAssociatedProducts( $products ) {
+
+		$this->cleanAssociatedProducts();
+
+		foreach ( $products as $product ) {
+			Db::getInstance()->insert( 'flexfaq_product', array(
+				'id_flexfaq' => (int) $this->id,
+				'id_product' => (int) $product
+			) );
+		}
+
+
+	}
+
+	/**
+	 * Clean associated products for current object
+	 *
+	 * @return bool
+	 */
+	public function cleanAssociatedProducts() {
+		return Db::getInstance()->delete( 'flexfaq_product', 'id_flexfaq = ' . (int) $this->id );
 	}
 
 	/**
@@ -111,9 +171,11 @@ class FlexFaqModel extends ObjectModelCore {
 	public function update( $null_values = false ) {
 		$return = parent::update( $null_values );
 
-		if($return !== false) {
-			$this->setAssociatedCategories($this->categories);
+		if ( $return !== false ) {
+			$this->setAssociatedCategories( $this->categories );
+			$this->setAssociatedProducts( $this->products );
 		}
+
 		return $return;
 	}
 
@@ -126,10 +188,61 @@ class FlexFaqModel extends ObjectModelCore {
 	public function delete() {
 		$return = parent::delete();
 
-		if($return !== false) {
+		if ( $return !== false ) {
 			$this->cleanAssociatedCategories();
+			$this->cleanAssociatedProducts();
 		}
+
 		return $return;
+	}
+
+	/**
+	 * Get Associated Products for current object
+	 *
+	 * @return array
+	 */
+	public function getAssociatedProducts() {
+
+		$products = array();
+
+		if ( ! $this->id ) {
+			return $products;
+		}
+
+		$db_products = Db::getInstance()->ExecuteS( '
+			SELECT id_product 
+			FROM `' . _DB_PREFIX_ . 'flexfaq_product`
+			WHERE id_flexfaq = ' . (int) $this->id );
+
+		foreach ( $db_products as $product ) {
+			$products[] = $product['id_product'];
+		}
+
+		return $products;
+	}
+
+	/**
+	 * Get Associated Products for current object
+	 *
+	 * @return array
+	 */
+	public function getAssociableProducts() {
+
+		$products = array();
+
+		if ( ! $this->id ) {
+			return $products;
+		}
+
+		return Db::getInstance()->ExecuteS( '
+			SELECT DISTINCT p.id_product, CONCAT (p.reference," - ",pl.name) as name 
+			FROM `' . _DB_PREFIX_ . 'product` p
+			LEFT JOIN `' . _DB_PREFIX_ . 'product_lang` pl 
+			ON pl.id_product = p.id_product 
+			AND pl.id_lang = ' . (int) Context::getContext()->language->id . '
+			WHERE p.id_category_default NOT IN (' . implode( ',', $this->getAssociatedCategories() ) . ')
+			ORDER BY name ASC' );
+
 	}
 
 	/**
@@ -155,33 +268,5 @@ class FlexFaqModel extends ObjectModelCore {
 		}
 
 		return $categories;
-	}
-
-	/**
-	 * Save associated categories for current object
-	 *
-	 * @param $categories array
-	 */
-	public function setAssociatedCategories( $categories ) {
-
-		$this->cleanAssociatedCategories();
-
-		foreach ( $categories as $category ) {
-			Db::getInstance()->insert( 'flexfaq_category', array(
-				'id_flexfaq' => (int) $this->id,
-				'id_category'    => (int) $category
-			) );
-		}
-
-
-	}
-
-	/**
-	 * Clean associated categories for current object
-	 *
-	 * @return bool
-	 */
-	public function cleanAssociatedCategories() {
-		return Db::getInstance()->delete( 'flexfaq_category', 'id_flexfaq = ' . (int) $this->id );
 	}
 }

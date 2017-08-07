@@ -18,7 +18,7 @@
  * limitations under the Licence.
  */
 
-require_once _PS_MODULE_DIR_.'flexfaq/classes/FlexFaqModel.php';
+require_once _PS_MODULE_DIR_ . 'flexfaq/classes/FlexFaqModel.php';
 
 class AdminFlexfaqController extends ModuleAdminController {
 
@@ -43,20 +43,20 @@ class AdminFlexfaqController extends ModuleAdminController {
 				'icon'    => 'icon-trash'
 			)
 		);
-		$this->fields_list = array(
+		$this->fields_list  = array(
 			$this->identifier => array(
 				'title' => '#',
 			),
-			'title' => array(
-				'title' => $this->l('Title'),
+			'title'           => array(
+				'title' => $this->l( 'Title' ),
 			),
-			'common' => array(
-				'title' => $this->l('Common'),
+			'common'          => array(
+				'title'  => $this->l( 'Common' ),
 				'active' => 'status',
 				'search' => false
 			),
-			'active' => array(
-				'title' => $this->l('Enabled'),
+			'active'          => array(
+				'title'  => $this->l( 'Enabled' ),
 				'active' => 'status',
 				'search' => false
 			),
@@ -69,93 +69,111 @@ class AdminFlexfaqController extends ModuleAdminController {
 
 		$this->fields_form = array(
 			'legend' => array(
-				'title' => $this->l('Flex FAQ'),
+				'title' => $this->l( 'Flex FAQ' ),
 			),
-			'input' => array(
+			'input'  => array(
 				array(
-					'type' => 'text',
-					'label' => $this->l('Title'),
-					'name' => 'title',
-					'size' => 255,
-					'maxlength' => 255,
-					'required' => true,
-					'lang' => true,
-					'desc' => $this->l('Title / Question of the item')
+					'name'      => 'title',
+					'type'      => 'text',
+					'lang'      => $this->object::$definition['fields']['title']['lang'],
+					'required'  => $this->object::$definition['fields']['title']['required'],
+					'maxlength' => $this->object::$definition['fields']['title']['size'],
+					'label'     => $this->l( 'Title' ),
+					'title'     => $this->l( 'Title' ),
+					'desc'      => $this->l( 'Title / Question of the item' ),
 				),
 				array(
-					'type' => 'textarea',
-					'label' => $this->l('Item content'),
-					'name' => 'content',
-					'rows' => 5,
-					'cols' => 60,
-					'lang' => true,
-					'desc' => $this->l('Main content for the item')
+					'name'          => 'content',
+					'type'          => 'textarea',
+					'lang'          => $this->object::$definition['fields']['title']['lang'],
+					'required'      => $this->object::$definition['fields']['content']['required'],
+					'maxlength'     => $this->object::$definition['fields']['content']['size'],
+					'label'         => $this->l( 'Item content' ),
+					'title'         => $this->l( 'Item content' ),
+					'desc'          => $this->l( 'Main content for the item' ),
 				),
 				array(
-					'type' => 'switch',
-					'label' => $this->l('Common'),
-					'title' => $this->l('Common'),
-					'name' => 'common',
-					'required' => true,
-					'desc' => $this->l('Display item in the common FAQ page'),
-					'is_bool' => true,
-					'values' => array(
+					'name'     => 'common',
+					'type'     => 'switch',
+					'required' => $this->object::$definition['fields']['common']['required'],
+					'label'    => $this->l( 'Common' ),
+					'title'    => $this->l( 'Common' ),
+					'desc'     => $this->l( 'Display item in the common FAQ page' ),
+					'is_bool'  => true,
+					'values'   => array(
 						array(
-							'id' => 'common_on',
+							'id'    => 'common_on',
 							'value' => 1,
-							'label' => $this->l('Yes')),
+							'label' => $this->l( 'Yes' )
+						),
 						array(
-							'id' => 'common_off',
+							'id'    => 'common_off',
 							'value' => 0,
-							'label' => $this->l('No')
+							'label' => $this->l( 'No' )
 						)
 					)
 				),
 				array(
-					'type' => 'switch',
-					'label' => $this->l('Enabled'),
-					'title' => $this->l('Enabled'),
-					'name' => 'active',
-					'required' => true,
-					'desc' => $this->l('Enable or Disable the item'),
-					'is_bool' => true,
-					'values' => array(
+					'name'     => 'active',
+					'type'     => 'switch',
+					'required' => $this->object::$definition['fields']['active']['required'],
+					'label'    => $this->l( 'Enabled' ),
+					'title'    => $this->l( 'Enabled' ),
+					'desc'     => $this->l( 'Enable or Disable the item' ),
+					'is_bool'  => true,
+					'values'   => array(
 						array(
-							'id' => 'active_on',
+							'id'    => 'active_on',
 							'value' => 1,
-							'label' => $this->l('Enabled')),
+							'label' => $this->l( 'Enabled' )
+						),
 						array(
-							'id' => 'active_off',
+							'id'    => 'active_off',
 							'value' => 0,
-							'label' => $this->l('Disabled')
+							'label' => $this->l( 'Disabled' )
 						)
 					)
 				),
 				array(
-					'type' => 'categories',
-					'label' => $this->l('Associated categories'),
-					'name' => 'categories',
-					'tree' => array(
-						'root_category' => 1,
-						'id' => 'id_category',
-						'name' => 'name_category',
-						'use_checkbox' => true,
+					'name' => 'products[]',
+					'type' => 'select',
+					'multiple' => true,
+					'class' => 'chosen',
+					'label' => $this->l( 'Product(s)' ),
+					'title'    => $this->l( 'Product(s)' ),
+					'desc'     => $this->l( 'Select one or more associated products' ),
+					'options' => array(
+						'query' => $this->object->getAssociableProducts(),
+						'id' => 'id_product',
+						'name' => 'name'
+					)
+				),
+				array(
+					'name'  => 'categories',
+					'type'  => 'categories',
+					'label' => $this->l( 'Associated categories' ),
+					'tree'  => array(
+						'root_category'       => 1,
+						'id'                  => 'id_category',
+						'name'                => 'name_category',
+						'use_checkbox'        => true,
 						'selected_categories' => $this->object->getAssociatedCategories(),
 					)
 				),
 			),
 			'submit' => array(
-				'title' => $this->l('Save'),
+				'title' => $this->l( 'Save' ),
 			)
 		);
-		if (Shop::isFeatureActive()) {
+		if ( Shop::isFeatureActive() ) {
 			$this->fields_form['input'][] = array(
-				'type' => 'shop',
-				'name' => 'shops',
-				'label' => $this->l('Associated shops'),
-				'title' => $this->l('Associated shops')
+				'name'  => 'shops',
+				'type'  => 'shop',
+				'label' => $this->l( 'Associated shops' ),
+				'title' => $this->l( 'Associated shops' )
 			);
 		}
+
 		return parent::renderForm();
 	}
 }
