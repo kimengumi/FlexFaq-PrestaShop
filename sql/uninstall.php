@@ -19,11 +19,14 @@
  */
 
 $sql = array();
-
-$sql[] = 'DROP TABLE  `' . _DB_PREFIX_ . 'flexfaq`;';
-$sql[] = 'DROP TABLE  `' . _DB_PREFIX_ . 'flexfaq_shop`;';
-$sql[] = 'DROP TABLE  `' . _DB_PREFIX_ . 'flexfaq_lang`;';
-$sql[] = 'DROP TABLE  `' . _DB_PREFIX_ . 'flexfaq_product`;';
+/*
+ * Was useful for initial model testing, but not for live use.
+ *
+ * $sql[] = 'DROP TABLE  `' . _DB_PREFIX_ . 'flexfaq`;';
+ * $sql[] = 'DROP TABLE  `' . _DB_PREFIX_ . 'flexfaq_shop`;';
+ * $sql[] = 'DROP TABLE  `' . _DB_PREFIX_ . 'flexfaq_lang`;';
+ * $sql[] = 'DROP TABLE  `' . _DB_PREFIX_ . 'flexfaq_product`;';
+*/
 
 foreach ($sql as $query) {
     if (Db::getInstance()->execute($query) == false) {
