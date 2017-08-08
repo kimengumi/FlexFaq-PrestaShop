@@ -22,6 +22,8 @@ if ( ! defined( '_PS_VERSION_' ) ) {
 	exit;
 }
 
+require_once _PS_MODULE_DIR_ . 'flexfaq/classes/FlexFaqModel.php';
+
 class Flexfaq extends Module {
 
 	public function __construct() {
@@ -62,7 +64,7 @@ class Flexfaq extends Module {
 
 		return parent::install() &&
 		       $tab->add() &&
-		       $this->registerHook( 'displayProductExtraContent' );
+		       $this->registerHook( 'productFooter' );
 	}
 
 	/**
@@ -74,6 +76,7 @@ class Flexfaq extends Module {
 
 		include( dirname( __FILE__ ) . '/sql/uninstall.php' );
 
+
 		// Module Tab
 		if ( $id_tab = (int) Tab::getIdFromClassName( 'AdminFlexfaq' ) ) {
 			$tab = new Tab( $id_tab );
@@ -83,7 +86,23 @@ class Flexfaq extends Module {
 		return parent::uninstall();
 	}
 
-	public function hookDisplayProductExtraContent() {
-		/* Place your code here. */
+	/**
+	 * Display in product page
+	 *
+	 * @param $params
+	 *
+	 * @return string
+	 */
+	public function hookProductFooter( $params ) {
+
+		$this->context->smarty->assign( 'faqs',
+			FlexFaqModel::getCollectionByProductId(
+				$params['product']->id,
+				$params['product']->id_category_default,
+				$params['cookie']->id_lang
+			, true ));
+
+		return $this->display(__FILE__, 'productfooter.tpl');
+
 	}
 }

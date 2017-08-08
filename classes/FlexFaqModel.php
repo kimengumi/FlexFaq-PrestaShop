@@ -83,6 +83,61 @@ class FlexFaqModel extends ObjectModelCore {
 	}
 
 	/**
+	 * Get all Faqs related to a product ID
+	 *
+	 * @param $product_id
+	 *
+	 * @return array
+	 */
+	public static function getCollectionByProductId( $id_product, $id_category_default, $id_lang = null ) {
+
+		if ( ! $id_lang ) {
+			$id_lang = Context::getContext()->language->id;
+		}
+
+		$sql = '
+			SELECT f.id_flexfaq,fl.title,fl.content  
+			FROM `' . _DB_PREFIX_ . 'flexfaq` f
+			LEFT JOIN `' . _DB_PREFIX_ . 'flexfaq_product` fp ON fp.id_flexfaq=f.id_flexfaq
+			LEFT JOIN `' . _DB_PREFIX_ . 'flexfaq_category` fc ON fc.id_flexfaq=f.id_flexfaq
+			LEFT JOIN `' . _DB_PREFIX_ . 'flexfaq_lang` fl ON fl.id_flexfaq=f.id_flexfaq AND fl.id_lang= ' . (int) $id_lang . '
+			INNER JOIN `' . _DB_PREFIX_ . 'flexfaq_shop` fs ON fs.id_flexfaq=f.id_flexfaq AND fs.id_shop= ' . (int) Shop::getContextShopID() . '
+			WHERE f.active=1
+			AND (fp.id_product = ' . (int) $id_product . ' OR fc.id_category = ' . (int) $id_category_default . ')
+			ORDER BY f.position ASC';
+
+		return Db::getInstance()->ExecuteS( $sql );
+
+	}
+
+	/**
+	 * Get all Faqs related to the common page ID
+	 *
+	 * @param $product_id
+	 *
+	 * @return array
+	 */
+	public static function getCommonCollection( $id_lang = null ) {
+
+		if ( ! $id_lang ) {
+			$id_lang = Context::getContext()->language->id;
+		}
+
+		$sql = '
+			SELECT f.id_flexfaq,fl.title,fl.content  
+			FROM `' . _DB_PREFIX_ . 'flexfaq` f
+			LEFT JOIN `' . _DB_PREFIX_ . 'flexfaq_lang` fl ON fl.id_flexfaq=f.id_flexfaq AND fl.id_lang= ' . (int) $id_lang . '
+			INNER JOIN `' . _DB_PREFIX_ . 'flexfaq_shop` fs ON fs.id_flexfaq=f.id_flexfaq AND fs.id_shop= ' . (int) Shop::getContextShopID() . '
+			WHERE f.active=1
+			AND f.common=1
+			ORDER BY f.position ASC';
+
+		return Db::getInstance()->ExecuteS( $sql );
+
+	}
+
+
+	/**
 	 * Adds current object to the database
 	 *
 	 * @param bool $auto_date
