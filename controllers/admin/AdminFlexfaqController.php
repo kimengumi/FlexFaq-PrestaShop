@@ -67,6 +67,7 @@ class AdminFlexfaqController extends ModuleAdminController {
 
 	public function renderForm() {
 
+		$this->fields_value['products[]']=$this->object->getAssociatedProducts();
 		$this->fields_form = array(
 			'legend' => array(
 				'title' => $this->l( 'Flex FAQ' ),
