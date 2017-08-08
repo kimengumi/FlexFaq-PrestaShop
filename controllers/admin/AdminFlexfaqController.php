@@ -66,11 +66,12 @@ class AdminFlexfaqController extends ModuleAdminController {
 	}
 
 	public function renderForm() {
-
+		$this->page_header_toolbar_title  .= ': Flex FAQ';
+		$this->multiple_fieldsets         = true;
 		$this->fields_value['products[]'] = $this->object->getAssociatedProducts();
-		$this->fields_form                = array(
+		$this->fields_form[0]['form']     = array(
 			'legend' => array(
-				'title' => $this->l( 'Flex FAQ' ),
+				'title' => $this->l( 'FAQ' ),
 			),
 			'input'  => array(
 				array(
@@ -78,7 +79,6 @@ class AdminFlexfaqController extends ModuleAdminController {
 					'type'     => 'switch',
 					'required' => $this->object::$definition['fields']['active']['required'],
 					'label'    => $this->l( 'Enabled' ),
-					'title'    => $this->l( 'Enabled' ),
 					'desc'     => $this->l( 'Enable or Disable the item' ),
 					'is_bool'  => true,
 					'values'   => array(
@@ -101,7 +101,6 @@ class AdminFlexfaqController extends ModuleAdminController {
 					'required'  => $this->object::$definition['fields']['title']['required'],
 					'maxlength' => $this->object::$definition['fields']['title']['size'],
 					'label'     => $this->l( 'Title' ),
-					'title'     => $this->l( 'Title' ),
 					'desc'      => $this->l( 'Title / Question of the item' ),
 				),
 				array(
@@ -111,15 +110,20 @@ class AdminFlexfaqController extends ModuleAdminController {
 					'required'  => $this->object::$definition['fields']['content']['required'],
 					'maxlength' => $this->object::$definition['fields']['content']['size'],
 					'label'     => $this->l( 'Item content' ),
-					'title'     => $this->l( 'Item content' ),
 					'desc'      => $this->l( 'Main content for the item' ),
 				),
+			)
+		);
+		$this->fields_form[1]['form']     = array(
+			'legend' => array(
+				'title' => $this->l( 'Associations' ),
+			),
+			'input'  => array(
 				array(
 					'name'     => 'common',
 					'type'     => 'switch',
 					'required' => $this->object::$definition['fields']['common']['required'],
 					'label'    => $this->l( 'Common' ),
-					'title'    => $this->l( 'Common' ),
 					'desc'     => $this->l( 'Display item in the common FAQ page' ),
 					'is_bool'  => true,
 					'values'   => array(
@@ -139,9 +143,8 @@ class AdminFlexfaqController extends ModuleAdminController {
 					'name'     => 'products[]',
 					'type'     => 'select',
 					'multiple' => true,
-					'class'    => 'chosen',
+					'class'    => 'chosen fixed-width-xxl',
 					'label'    => $this->l( 'Associated Product(s)' ),
-					'title'    => $this->l( 'Product(s)' ),
 					'desc'     => $this->l( 'Select one or more associated products' ),
 					'options'  => array(
 						'query' => $this->object->getAssociableProducts(),
@@ -153,6 +156,7 @@ class AdminFlexfaqController extends ModuleAdminController {
 					'name'  => 'categories',
 					'type'  => 'categories',
 					'label' => $this->l( 'Associated categories' ),
+					'desc'  => $this->l( 'Select one or more associated categories' ),
 					'tree'  => array(
 						'root_category'       => 1,
 						'id'                  => 'id_category',
@@ -161,18 +165,19 @@ class AdminFlexfaqController extends ModuleAdminController {
 						'selected_categories' => $this->object->getAssociatedCategories(),
 					)
 				),
-			),
-			'submit' => array(
-				'title' => $this->l( 'Save' ),
 			)
 		);
 		if ( Shop::isFeatureActive() ) {
-			$this->fields_form['input'][] = array(
+			$this->fields_form[1]['form']['input'][] = array(
 				'name'  => 'shops',
 				'type'  => 'shop',
 				'label' => $this->l( 'Associated shops' ),
-				'title' => $this->l( 'Associated shops' )
+				'desc'  => $this->l( 'Select one or more associated shops' ),
 			);
+		}
+
+		foreach ( $this->fields_form as $key => $value ) {
+			$this->fields_form[ $key ]['form']['submit'] = array( 'title' => $this->l( 'Save' ) );
 		}
 
 		return parent::renderForm();
