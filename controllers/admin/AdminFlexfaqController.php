@@ -67,12 +67,33 @@ class AdminFlexfaqController extends ModuleAdminController {
 
 	public function renderForm() {
 
-		$this->fields_value['products[]']=$this->object->getAssociatedProducts();
-		$this->fields_form = array(
+		$this->fields_value['products[]'] = $this->object->getAssociatedProducts();
+		$this->fields_form                = array(
 			'legend' => array(
 				'title' => $this->l( 'Flex FAQ' ),
 			),
 			'input'  => array(
+				array(
+					'name'     => 'active',
+					'type'     => 'switch',
+					'required' => $this->object::$definition['fields']['active']['required'],
+					'label'    => $this->l( 'Enabled' ),
+					'title'    => $this->l( 'Enabled' ),
+					'desc'     => $this->l( 'Enable or Disable the item' ),
+					'is_bool'  => true,
+					'values'   => array(
+						array(
+							'id'    => 'active_on',
+							'value' => 1,
+							'label' => $this->l( 'Enabled' )
+						),
+						array(
+							'id'    => 'active_off',
+							'value' => 0,
+							'label' => $this->l( 'Disabled' )
+						)
+					)
+				),
 				array(
 					'name'      => 'title',
 					'type'      => 'text',
@@ -84,14 +105,14 @@ class AdminFlexfaqController extends ModuleAdminController {
 					'desc'      => $this->l( 'Title / Question of the item' ),
 				),
 				array(
-					'name'          => 'content',
-					'type'          => 'textarea',
-					'lang'          => $this->object::$definition['fields']['title']['lang'],
-					'required'      => $this->object::$definition['fields']['content']['required'],
-					'maxlength'     => $this->object::$definition['fields']['content']['size'],
-					'label'         => $this->l( 'Item content' ),
-					'title'         => $this->l( 'Item content' ),
-					'desc'          => $this->l( 'Main content for the item' ),
+					'name'      => 'content',
+					'type'      => 'textarea',
+					'lang'      => $this->object::$definition['fields']['title']['lang'],
+					'required'  => $this->object::$definition['fields']['content']['required'],
+					'maxlength' => $this->object::$definition['fields']['content']['size'],
+					'label'     => $this->l( 'Item content' ),
+					'title'     => $this->l( 'Item content' ),
+					'desc'      => $this->l( 'Main content for the item' ),
 				),
 				array(
 					'name'     => 'common',
@@ -115,38 +136,17 @@ class AdminFlexfaqController extends ModuleAdminController {
 					)
 				),
 				array(
-					'name'     => 'active',
-					'type'     => 'switch',
-					'required' => $this->object::$definition['fields']['active']['required'],
-					'label'    => $this->l( 'Enabled' ),
-					'title'    => $this->l( 'Enabled' ),
-					'desc'     => $this->l( 'Enable or Disable the item' ),
-					'is_bool'  => true,
-					'values'   => array(
-						array(
-							'id'    => 'active_on',
-							'value' => 1,
-							'label' => $this->l( 'Enabled' )
-						),
-						array(
-							'id'    => 'active_off',
-							'value' => 0,
-							'label' => $this->l( 'Disabled' )
-						)
-					)
-				),
-				array(
-					'name' => 'products[]',
-					'type' => 'select',
+					'name'     => 'products[]',
+					'type'     => 'select',
 					'multiple' => true,
-					'class' => 'chosen',
-					'label' => $this->l( 'Product(s)' ),
+					'class'    => 'chosen',
+					'label'    => $this->l( 'Associated Product(s)' ),
 					'title'    => $this->l( 'Product(s)' ),
 					'desc'     => $this->l( 'Select one or more associated products' ),
-					'options' => array(
+					'options'  => array(
 						'query' => $this->object->getAssociableProducts(),
-						'id' => 'id_product',
-						'name' => 'name'
+						'id'    => 'id_product',
+						'name'  => 'name'
 					)
 				),
 				array(

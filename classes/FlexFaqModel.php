@@ -215,7 +215,7 @@ class FlexFaqModel extends ObjectModelCore {
 			WHERE id_flexfaq = ' . (int) $this->id );
 
 		foreach ( $db_products as $product ) {
-			$products[] = $product['id_product'];
+			$products[] = (int) $product['id_product'];
 		}
 
 		return $products;
@@ -228,19 +228,16 @@ class FlexFaqModel extends ObjectModelCore {
 	 */
 	public function getAssociableProducts() {
 
-		$products = array();
-
-		if ( ! $this->id ) {
-			return $products;
-		}
+		$associated_categories = $this->getAssociatedCategories();
 
 		return Db::getInstance()->ExecuteS( '
-			SELECT DISTINCT p.id_product, CONCAT (p.reference," - ",pl.name) as name 
+			SELECT DISTINCT p.id_product, CONCAT (p.reference," - ",pl.name) AS name 
 			FROM `' . _DB_PREFIX_ . 'product` p
 			LEFT JOIN `' . _DB_PREFIX_ . 'product_lang` pl 
 			ON pl.id_product = p.id_product 
 			AND pl.id_lang = ' . (int) Context::getContext()->language->id . '
-			WHERE p.id_category_default NOT IN (' . implode( ',', $this->getAssociatedCategories() ) . ')
+			' . ( count( $associated_categories ) ?
+				' WHERE p.id_category_default NOT IN (' . implode( ',', $associated_categories ) . ')' : ' ' ) . '
 			ORDER BY name ASC' );
 
 	}
@@ -264,7 +261,7 @@ class FlexFaqModel extends ObjectModelCore {
 			WHERE id_flexfaq = ' . (int) $this->id );
 
 		foreach ( $db_categories as $category ) {
-			$categories[] = $category['id_category'];
+			$categories[] = (int) $category['id_category'];
 		}
 
 		return $categories;
