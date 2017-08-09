@@ -22,6 +22,8 @@ require_once _PS_MODULE_DIR_ . 'flexfaq/classes/FlexFaqModel.php';
 
 class AdminFlexfaqController extends ModuleAdminController {
 
+	protected $position_identifier = 'id_flexfaq';
+
 	public function __construct() {
 
 		$this->context          = Context::getContext();
@@ -29,6 +31,7 @@ class AdminFlexfaqController extends ModuleAdminController {
 		$this->table            = 'flexfaq';
 		$this->className        = 'FlexFaqModel';
 		$this->identifier       = 'id_flexfaq';
+		$this->_defaultOrderBy  = 'position';
 		$this->lang             = true;
 		$this->requiredDatabase = true;
 		$this->addRowAction( 'edit' );
@@ -49,6 +52,10 @@ class AdminFlexfaqController extends ModuleAdminController {
 			),
 			'title'           => array(
 				'title' => $this->l( 'Title' ),
+			),
+			'position'        => array(
+				'title'    => $this->l( 'Position' ),
+				'position' => 'position',
 			),
 			'common'          => array(
 				'title'  => $this->l( 'Common' ),
@@ -181,5 +188,29 @@ class AdminFlexfaqController extends ModuleAdminController {
 		}
 
 		return parent::renderForm();
+	}
+
+	public function ajaxProcessUpdatePositions() {
+		$way        = (int) ( Tools::getValue( 'way' ) );
+		$id_flexfaq = (int) ( Tools::getValue( 'id' ) );
+		$positions  = Tools::getValue( $this->table );
+
+		foreach ( $positions as $position => $value ) {
+			$pos = explode( '_', $value );
+
+			if ( isset( $pos[2] ) && (int) $pos[2] === $id_flexfaq ) {
+				if ( $faq = new FlexFaqModel( (int) $pos[2] ) ) {
+					if ( isset( $position ) && $faq->updatePosition( $way, $position ) ) {
+						echo 'ok position ' . (int) $position . ' for faq ' . (int) $pos[1] . '\r\n';
+					} else {
+						echo '{"hasError" : true, "errors" : "Can not update faq ' . (int) $id_flexfaq . ' to position ' . (int) $position . ' "}';
+					}
+				} else {
+					echo '{"hasError" : true, "errors" : "This faq (' . (int) $id_flexfaq . ') can t be loaded"}';
+				}
+
+				break;
+			}
+		}
 	}
 }

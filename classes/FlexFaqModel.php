@@ -21,7 +21,7 @@ if ( ! defined( '_PS_VERSION_' ) ) {
 	exit;
 }
 
-class FlexFaqModel extends ObjectModelCore {
+class FlexFaqModel extends ObjectModel {
 
 	public static $definition = array(
 		'table'     => 'flexfaq',
@@ -148,6 +148,11 @@ class FlexFaqModel extends ObjectModelCore {
 	 * @throws PrestaShopException
 	 */
 	public function add( $auto_date = true, $null_values = false ) {
+
+		if ( ! $this->position ) {
+			$this->position = $this->id;
+		}
+
 		$return = parent::add( $auto_date, $null_values );
 
 		if ( $return !== false ) {
@@ -224,6 +229,11 @@ class FlexFaqModel extends ObjectModelCore {
 	 * @throws PrestaShopException
 	 */
 	public function update( $null_values = false ) {
+
+		if ( ! $this->position ) {
+			$this->position = $this->id;
+		}
+
 		$return = parent::update( $null_values );
 
 		if ( $return !== false ) {
@@ -321,4 +331,49 @@ class FlexFaqModel extends ObjectModelCore {
 
 		return $categories;
 	}
+
+	/**
+	 * Moves a flexfaq
+	 *
+	 * @param bool $way Up (1) or Down (0)
+	 * @param int $position
+	 * @return bool Update result
+	 */
+	public function updatePosition($way, $position)
+	{
+		if (!$res = Db::getInstance()->executeS(
+			'SELECT `id_flexfaq`, `position`
+                        FROM `'._DB_PREFIX_.'flexfaq`
+                        WHERE `active` = 1
+                        ORDER BY `position` ASC'
+		)) {
+			return false;
+		}
+
+		foreach ($res as $flexfaq) {
+			if ((int)$flexfaq['id_flexfaq'] == (int)$this->id) {
+				$moved_flexfaq = $flexfaq;
+			}
+		}
+
+		if (!isset($moved_flexfaq) || !isset($position)) {
+			return false;
+		}
+
+		// < and > statements rather than BETWEEN operator
+		// since BETWEEN is treated differently according to databases
+		return (Db::getInstance()->execute('
+                        UPDATE `'._DB_PREFIX_.'flexfaq`
+                        SET `position`= `position` '.($way ? '- 1' : '+ 1').'
+                        WHERE `position`
+                        '.($way
+					? '> '.(int)$moved_flexfaq['position'].' AND `position` <= '.(int)$position
+					: '< '.(int)$moved_flexfaq['position'].' AND `position` >= '.(int)$position.'
+                        AND `active` = 1'))
+		        && Db::getInstance()->execute('
+                        UPDATE `'._DB_PREFIX_.'flexfaq`
+                        SET `position` = '.(int)$position.'
+                        WHERE `id_flexfaq` = '.(int)$moved_flexfaq['id_flexfaq']));
+	}
+
 }
