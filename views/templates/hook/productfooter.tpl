@@ -36,8 +36,8 @@
     <div class="rte">
         <button class="btn btn-default" type="button">
             <a href="{$link->getModuleLink('flexfaq','faq')|escape:'html'}"
-               title="{l s='Global FAQ' mod='flexfaq'}">
-                {l s='Global FAQ' mod='flexfaq'}
+               title="{l s='Common  FAQ' mod='flexfaq'}">
+                {l s='Common FAQ' mod='flexfaq'}
             </a>
         </button>
     </div>
