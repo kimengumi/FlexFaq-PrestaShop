@@ -96,7 +96,7 @@ class FlexFaqModel extends ObjectModelCore {
 		}
 
 		$sql = '
-			SELECT f.id_flexfaq,fl.title,fl.content  
+			SELECT DISTINCT f.id_flexfaq,fl.title,fl.content  
 			FROM `' . _DB_PREFIX_ . 'flexfaq` f
 			LEFT JOIN `' . _DB_PREFIX_ . 'flexfaq_product` fp ON fp.id_flexfaq=f.id_flexfaq
 			LEFT JOIN `' . _DB_PREFIX_ . 'flexfaq_category` fc ON fc.id_flexfaq=f.id_flexfaq
@@ -124,7 +124,7 @@ class FlexFaqModel extends ObjectModelCore {
 		}
 
 		$sql = '
-			SELECT f.id_flexfaq,fl.title,fl.content  
+			SELECT DISTINCT f.id_flexfaq,fl.title,fl.content  
 			FROM `' . _DB_PREFIX_ . 'flexfaq` f
 			LEFT JOIN `' . _DB_PREFIX_ . 'flexfaq_lang` fl ON fl.id_flexfaq=f.id_flexfaq AND fl.id_lang= ' . (int) $id_lang . '
 			INNER JOIN `' . _DB_PREFIX_ . 'flexfaq_shop` fs ON fs.id_flexfaq=f.id_flexfaq AND fs.id_shop= ' . (int) Shop::getContextShopID() . '

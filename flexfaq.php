@@ -64,6 +64,7 @@ class Flexfaq extends Module {
 
 		return parent::install() &&
 		       $tab->add() &&
+		       $this->registerHook( 'moduleRoutes' ) &&
 		       $this->registerHook( 'productFooter' );
 	}
 
@@ -97,12 +98,33 @@ class Flexfaq extends Module {
 
 		$this->context->smarty->assign( 'faqs',
 			FlexFaqModel::getCollectionByProductId(
-				$params['product']->id,
-				$params['product']->id_category_default,
-				$params['cookie']->id_lang
-			, true ));
+				(int) $params['product']->id,
+				(int) $params['product']->id_category_default,
+				(int) $params['cookie']->id_lang
+				, true ) );
 
-		return $this->display(__FILE__, 'productfooter.tpl');
+		return $this->display( __FILE__, 'productfooter.tpl' );
 
+	}
+
+	/**
+	 * Custom routes for front controllers
+	 *
+	 * @return array
+	 */
+	public function hookModuleRoutes() {
+		return array(
+			'flexfaq_faq' => array(
+				'controller' => 'faq',
+				'rule'       => 'faq',
+				'keywords'   => array(
+					'module' => array( 'regexp' => 'flexfaq', 'param' => 'module' )
+				),
+				'params'     => array(
+					'fc'     => 'module',
+					'module' => $this->name
+				)
+			)
+		);
 	}
 }

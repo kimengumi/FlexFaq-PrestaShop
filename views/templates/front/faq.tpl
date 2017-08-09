@@ -17,14 +17,13 @@
  * limitations under the Licence.
  *}
 
-{if !empty($faqs)}
-    <section class="page-product-box">
-    <h3 class="page-product-heading">{l s='FAQ' mod='flexfaq'}</h3>
+<div class="block-faq">
+    <h1>{l s='FAQ' mod='flexfaq'}</h1>
     {foreach $faqs as $faq}
         <div class="rte" onclick="$('#faq-content-{$faq.id_flexfaq}').toggle();">
-            <h4 style="cursor:pointer">
+            <h3 style="cursor:pointer">
                 {$faq.title}
-            </h4>
+            </h3>
         </div>
         <div id="faq-content-{$faq.id_flexfaq}"
              class="rte" style="display:none;">
@@ -33,13 +32,4 @@
             </p>
         </div>
     {/foreach}
-    <div class="rte">
-        <button class="btn btn-default" type="button">
-            <a href="{$link->getModuleLink('flexfaq','faq')|escape:'html'}"
-               title="{l s='Global FAQ' mod='flexfaq'}">
-                {l s='Global FAQ' mod='flexfaq'}
-            </a>
-        </button>
-    </div>
-    </section>
-{/if}
+</div>
