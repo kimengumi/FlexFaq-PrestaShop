@@ -96,16 +96,25 @@ class Flexfaq extends Module {
 	 */
 	public function hookProductFooter( $params ) {
 
+		$context = Context::getContext();
+
+		if ( ! method_exists( $context->controller, 'getProduct' ) ) {
+			return null;
+		}
+
+		$product = $context->controller->getProduct();
+
 		$this->context->smarty->assign( 'faqs',
 			FlexFaqModel::getCollectionByProductId(
-				(int) $params['product']->id,
-				(int) $params['product']->id_category_default,
-				(int) $params['cookie']->id_lang
+				(int) $product->id,
+				(int) $product->id_category_default,
+				(int) $context->cookie->id_lang
 				, true ) );
 
 		return $this->display( __FILE__, 'productfooter.tpl' );
 
 	}
+
 
 	/**
 	 * Custom routes for front controllers
