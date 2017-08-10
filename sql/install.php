@@ -32,7 +32,7 @@ $sql[] = 'CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'flexfaq` (
 
 $sql[] = 'CREATE TABLE IF NOT EXISTS ' . _DB_PREFIX_ . 'flexfaq_shop (
 	`id_flexfaq` INT(10) NOT NULL,
-	`id_shop` int(10) DEFAULT NULL,
+	`id_shop` int(10) NOT NULL DEFAULT 0,
 	PRIMARY KEY(`id_flexfaq`, `id_shop`)
 	)ENGINE=' . _MYSQL_ENGINE_ . ' DEFAULT CHARSET=utf8';
 
