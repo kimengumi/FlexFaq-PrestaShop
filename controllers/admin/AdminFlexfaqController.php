@@ -73,6 +73,7 @@ class AdminFlexfaqController extends ModuleAdminController {
 	}
 
 	public function renderForm() {
+		$object=$this->object;
 		$this->page_header_toolbar_title  .= ': Flex FAQ';
 		$this->multiple_fieldsets         = true;
 		$this->fields_value['products[]'] = $this->object->getAssociatedProducts();
@@ -84,7 +85,7 @@ class AdminFlexfaqController extends ModuleAdminController {
 				array(
 					'name'     => 'active',
 					'type'     => 'switch',
-					'required' => $this->object::$definition['fields']['active']['required'],
+					'required' => $object::$definition['fields']['active']['required'],
 					'label'    => $this->l( 'Enabled' ),
 					'desc'     => $this->l( 'Enable or Disable the item' ),
 					'is_bool'  => true,
@@ -104,18 +105,18 @@ class AdminFlexfaqController extends ModuleAdminController {
 				array(
 					'name'      => 'title',
 					'type'      => 'text',
-					'lang'      => $this->object::$definition['fields']['title']['lang'],
-					'required'  => $this->object::$definition['fields']['title']['required'],
-					'maxlength' => $this->object::$definition['fields']['title']['size'],
+					'lang'      => $object::$definition['fields']['title']['lang'],
+					'required'  => $object::$definition['fields']['title']['required'],
+					'maxlength' => $object::$definition['fields']['title']['size'],
 					'label'     => $this->l( 'Title' ),
 					'desc'      => $this->l( 'Title / Question of the item' ),
 				),
 				array(
 					'name'      => 'content',
 					'type'      => 'textarea',
-					'lang'      => $this->object::$definition['fields']['title']['lang'],
-					'required'  => $this->object::$definition['fields']['content']['required'],
-					'maxlength' => $this->object::$definition['fields']['content']['size'],
+					'lang'      => $object::$definition['fields']['title']['lang'],
+					'required'  => $object::$definition['fields']['content']['required'],
+					'maxlength' => $object::$definition['fields']['content']['size'],
 					'label'     => $this->l( 'Item content' ),
 					'desc'      => $this->l( 'Main content for the item' ),
 				),
@@ -129,7 +130,7 @@ class AdminFlexfaqController extends ModuleAdminController {
 				array(
 					'name'     => 'common',
 					'type'     => 'switch',
-					'required' => $this->object::$definition['fields']['common']['required'],
+					'required' => $object::$definition['fields']['common']['required'],
 					'label'    => $this->l( 'Common' ),
 					'desc'     => $this->l( 'Display item in the common FAQ page' ),
 					'is_bool'  => true,
