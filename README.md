@@ -3,15 +3,17 @@
 ## Summary
 
 This module allow to manage a FAQ (Frequently Asked Question) warehouse, which is :
-- Multi-lingual
-- Multi-shop
-- Multi-Product
+- Multilingual
+- Multishop
+- Multiproducts
+- Per product FAQ
+- Global / common FAQ
+- lightweight Front Office theme
 
 ## How it works
 
 Each FAQ item can be associated to one or more products.   
-An item can also be associated to one or more categories.  
-This will automaticaly associate all products of the selectes categories with the item.  
+An item can also be associated to one or more categories: This will dynamicaly link all products of the selectes categories with the item.  
 A global / common FAQ is also available.  
 
 ## Screenshots
